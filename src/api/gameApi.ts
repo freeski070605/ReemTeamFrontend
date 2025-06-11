@@ -1,6 +1,6 @@
 import  { User, GameState, GameAction, TableStake, WithdrawalRequest } from '../types';
 
-const API_BASE_URL = 'https://hooks.jdoodle.net/proxy?url=https://api.reemteam.example.com';
+const API_BASE_URL = 'https://reemteamserver.onrender.com';
 
 // Helper function to get auth headers
 function getHeaders() {
