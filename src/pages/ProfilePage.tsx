@@ -1,7 +1,7 @@
 import  { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { updateProfile } from '../api/gameApi';
-import { fetchWithdrawalHistory, getMockWithdrawalHistory } from '../api/gameApi';
+import { fetchWithdrawalHistory } from '../api/gameApi';
 import { WithdrawalRequest } from '../types';
 import { Clock, User, DollarSign, CreditCard, Info, Award, LogOut } from 'lucide-react';
 import WithdrawalForm from '../components/WithdrawalForm';
@@ -47,12 +47,8 @@ export default function ProfilePage() {
     
     setIsLoading(true);
     try {
-      // For development, use mock data
-      if (process.env.NODE_ENV === 'development') {
-        const mockHistory = await getMockWithdrawalHistory();
-        setWithdrawals(mockHistory);
-      } else {
-        const history = await fetchWithdrawalHistory(user.id);
+
+      const history = await fetchWithdrawalHistory(user.id);
         setWithdrawals(history);
       }
     } catch (error) {
