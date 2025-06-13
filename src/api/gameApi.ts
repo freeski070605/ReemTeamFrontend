@@ -132,24 +132,33 @@ export async function createGame(userId: string, stake: number): Promise<GameSta
 }
 
 export async function joinGame(userId: string, gameId: string): Promise<GameState> {
-  try {
-    const response = await fetch(`${API_BASE_URL}/api/games/${gameId}/join`, {
-      method: 'POST',
-      headers: getHeaders(),
-      body: JSON.stringify({ userId })
-    });
-    
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Failed to join game');
-    }
-    
-    return await response.json();
-  } catch (error) {
-    console.error('Join game error:', error);
-    throw error;
+  if (!gameId || gameId === 'undefined') {
+    throw new Error('Invalid game ID');
   }
+
+  const response = await fetch(`${API_BASE_URL}/api/games/${gameId}/join`, {
+    method: 'POST',
+    headers: getHeaders(),
+    body: JSON.stringify({ userId })
+  });
+
+  const text = await response.text();
+
+  let data;
+  try {
+    data = JSON.parse(text);
+  } catch (err) {
+    console.error('Invalid JSON from joinGame:', text);
+    throw new Error('Unexpected server response');
+  }
+
+  if (!response.ok) {
+    throw new Error(data.error || 'Failed to join game');
+  }
+
+  return data;
 }
+
 
 export async function fetchGameState(gameId: string): Promise<GameState> {
   try {
