@@ -1,170 +1,171 @@
-import  { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import  { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Menu, X, User, LogIn, Home, BookOpen, DollarSign, LogOut, LayoutList } from 'lucide-react';
+import { Menu, X, User, LogOut, DollarSign, Home, Shield, Info, LogIn, CreditCard } from 'lucide-react';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
   const location = useLocation();
-  
+
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [location.pathname]);
+
   return (
-    <nav className="bg-gray-800">
+    <nav className="bg-gray-800/95 backdrop-blur-sm sticky top-0 z-50 shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
+        <div className="flex justify-between h-16">
+          <div className="flex">
+            <div className="flex-shrink-0 flex items-center">
               <Link to="/" className="flex items-center">
-                <svg className="h-8 w-8 text-primary-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <rect width="24" height="24" rx="12" fill="currentColor" fillOpacity="0.2" />
-                  <path d="M7 10.5L12 5.5L17 10.5L12 15.5L7 10.5Z" fill="currentColor" />
-                  <path d="M7 13.5L12 8.5L17 13.5L12 18.5L7 13.5Z" fill="currentColor" />
-                </svg>
-                <span className="ml-2 text-white text-xl font-bold font-display">Reem Team</span>
+                <Shield className="h-8 w-8 text-primary-500" />
+                <span className="ml-2 text-xl font-display font-bold text-white">Reem Team</span>
               </Link>
             </div>
-            <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-4">
-                <Link to="/" className={`px-3 py-2 rounded-md text-sm font-medium ${location.pathname === '/' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}>
-                  <Home className="h-4 w-4 inline mr-1" />
-                  Home
-                </Link>
-                <Link to="/lobby" className={`px-3 py-2 rounded-md text-sm font-medium ${location.pathname === '/lobby' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}>
-                  <LayoutList className="h-4 w-4 inline mr-1" />
-                  Game Lobby
-                </Link>
-                <Link to="/rules" className={`px-3 py-2 rounded-md text-sm font-medium ${location.pathname === '/rules' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}>
-                  <BookOpen className="h-4 w-4 inline mr-1" />
-                  Rules
-                </Link>
-                <Link to="/withdraw" className={`px-3 py-2 rounded-md text-sm font-medium ${location.pathname === '/withdraw' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}>
-                  <DollarSign className="h-4 w-4 inline mr-1" />
-                  Withdrawals
-                </Link>
-              </div>
+            <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
+              <Link to="/" className="border-transparent text-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium hover:border-primary-400 hover:text-primary-400 transition-colors">
+                Home
+              </Link>
+              <Link to="/lobby" className="border-transparent text-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium hover:border-primary-400 hover:text-primary-400 transition-colors">
+                Play Now
+              </Link>
+              <Link to="/rules" className="border-transparent text-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium hover:border-primary-400 hover:text-primary-400 transition-colors">
+                Rules
+              </Link>
             </div>
           </div>
-          <div className="hidden md:block">
-            <div className="ml-4 flex items-center md:ml-6">
-              {user ? (
-                <div className="flex items-center">
-                  <div className="mr-3 text-sm text-gray-300">
-                    <span className="hidden lg:inline mr-1">Balance:</span>
-                    <span className="text-white font-semibold">${user.balance}</span>
-                  </div>
-                  <div className="relative">
-                    <div className="flex items-center">
-                      <span className="mr-2 text-sm font-medium text-white">{user.username}</span>
-                      <img
-                        className="h-8 w-8 rounded-full"
-                        src={user.avatar}
-                        alt={user.username}
-                      />
+          <div className="hidden sm:ml-6 sm:flex sm:items-center">
+            {user ? (
+              <div className="flex items-center">
+                <Link to="/profile" className="bg-gray-700 hover:bg-gray-600 p-1 rounded-full text-white hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white mr-2">
+                  <span className="sr-only">View profile</span>
+                  <div className="flex items-center gap-1 px-2">
+                    <div className="h-6 w-6 rounded-full overflow-hidden">
+                      <img src={user.avatar} alt={user.username} className="h-full w-full object-cover" />
                     </div>
+                    <span className="text-sm">${user.balance || 0}</span>
                   </div>
+                </Link>
+
+                <div className="flex gap-2">
+                  <Link to="/profile" className="bg-gray-700 hover:bg-gray-600 px-3 py-1.5 rounded text-white hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+                    <span className="sr-only">View profile</span>
+                    <User className="h-4 w-4" />
+                  </Link>
+                  
                   <button
-                    onClick={logout}
-                    className="ml-4 px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                    onClick={() => {
+                      logout();
+                      navigate('/login');
+                    }}
+                    className="bg-gray-700 hover:bg-gray-600 px-3 py-1.5 rounded text-white hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
                   >
-                    <LogOut className="h-4 w-4 inline mr-1" />
-                    Sign out
+                    <span className="sr-only">Sign out</span>
+                    <LogOut className="h-4 w-4" />
                   </button>
                 </div>
-              ) : (
-                <div className="flex space-x-2">
-                  <Link
-                    to="/login"
-                    className="px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
-                  >
-                    <LogIn className="h-4 w-4 inline mr-1" />
-                    Sign in
-                  </Link>
-                  <Link
-                    to="/register"
-                    className="px-3 py-2 rounded-md text-sm font-medium bg-primary-600 text-white hover:bg-primary-700"
-                  >
-                    <User className="h-4 w-4 inline mr-1" />
-                    Register
-                  </Link>
-                </div>
-              )}
-            </div>
+              </div>
+            ) : (
+              <div className="flex gap-2">
+                <Link to="/login" className="bg-gray-700 hover:bg-gray-600 px-3 py-1.5 rounded text-white hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
+                  Login
+                </Link>
+                <Link to="/register" className="bg-primary-600 hover:bg-primary-700 px-3 py-1.5 rounded text-white hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-primary-500">
+                  Register
+                </Link>
+              </div>
+            )}
           </div>
-          <div className="-mr-2 flex md:hidden">
-            {/* Mobile menu button */}
+          <div className="-mr-2 flex items-center sm:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="bg-gray-800 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
             >
               <span className="sr-only">Open main menu</span>
               {isMenuOpen ? (
-                <X className="block h-6 w-6" />
+                <X className="block h-6 w-6" aria-hidden="true" />
               ) : (
-                <Menu className="block h-6 w-6" />
+                <Menu className="block h-6 w-6" aria-hidden="true" />
               )}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile menu */}
       {isMenuOpen && (
-        <div className="md:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+        <div className="sm:hidden">
+          <div className="pt-2 pb-3 space-y-1">
             <Link
               to="/"
-              className={`block px-3 py-2 rounded-md text-base font-medium ${location.pathname === '/' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
-              onClick={() => setIsMenuOpen(false)}
+              className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
             >
-              <Home className="h-4 w-4 inline mr-2" />
-              Home
+              <div className="flex items-center">
+                <Home className="h-5 w-5 mr-2" />
+                Home
+              </div>
             </Link>
             <Link
               to="/lobby"
-              className={`block px-3 py-2 rounded-md text-base font-medium ${location.pathname === '/lobby' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
-              onClick={() => setIsMenuOpen(false)}
+              className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
             >
-              <LayoutList className="h-4 w-4 inline mr-2" />
-              Game Lobby
+              <div className="flex items-center">
+                <Shield className="h-5 w-5 mr-2" />
+                Play Now
+              </div>
             </Link>
             <Link
               to="/rules"
-              className={`block px-3 py-2 rounded-md text-base font-medium ${location.pathname === '/rules' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
-              onClick={() => setIsMenuOpen(false)}
+              className="text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
             >
-              <BookOpen className="h-4 w-4 inline mr-2" />
-              Rules
-            </Link>
-            <Link
-              to="/withdraw"
-              className={`block px-3 py-2 rounded-md text-base font-medium ${location.pathname === '/withdraw' ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'}`}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <DollarSign className="h-4 w-4 inline mr-2" />
-              Withdrawals
+              <div className="flex items-center">
+                <Info className="h-5 w-5 mr-2" />
+                Rules
+              </div>
             </Link>
           </div>
           <div className="pt-4 pb-3 border-t border-gray-700">
             {user ? (
               <>
                 <div className="flex items-center px-5">
-                  <div className="flex-shrink-0">
-                    <img
-                      className="h-10 w-10 rounded-full"
-                      src={user.avatar}
-                      alt={user.username}
-                    />
+                  <div className="flex-shrink-0 h-10 w-10 rounded-full overflow-hidden">
+                    <img src={user.avatar} alt={user.username} className="h-full w-full object-cover" />
                   </div>
                   <div className="ml-3">
-                    <div className="text-base font-medium leading-none text-white">
-                      {user.username}
-                    </div>
-                    <div className="text-sm font-medium leading-none text-gray-400 mt-1">
-                      Balance: ${user.balance}
-                    </div>
+                    <div className="text-base font-medium text-white">{user.username}</div>
+                    <div className="text-sm font-medium text-gray-400">${user.balance || 0}</div>
                   </div>
                 </div>
-                <div className="mt-3 px-2 space-y-1">
+                <div className="mt-3 space-y-1">
+                  <Link
+                    to="/profile"
+                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
+                  >
+                    <div className="flex items-center">
+                      <User className="h-5 w-5 mr-2" />
+                      Your Profile
+                    </div>
+                  </Link>
+                  <Link
+                    to="/profile?tab=deposit"
+                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
+                  >
+                    <div className="flex items-center">
+                      <CreditCard className="h-5 w-5 mr-2" />
+                      Deposit
+                    </div>
+                  </Link>
+                  <Link
+                    to="/profile?tab=withdraw"
+                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
+                  >
+                    <div className="flex items-center">
+                      <DollarSign className="h-5 w-5 mr-2" />
+                      Withdraw
+                    </div>
+                  </Link>
                   <button
                     onClick={() => {
                       logout();
@@ -172,28 +173,32 @@ export default function Navbar() {
                     }}
                     className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
                   >
-                    <LogOut className="h-4 w-4 inline mr-2" />
-                    Sign out
+                    <div className="flex items-center">
+                      <LogOut className="h-5 w-5 mr-2" />
+                      Sign out
+                    </div>
                   </button>
                 </div>
               </>
             ) : (
-              <div className="px-2 space-y-1">
+              <div className="mt-3 space-y-1 px-2">
                 <Link
                   to="/login"
                   className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 hover:text-white hover:bg-gray-700"
-                  onClick={() => setIsMenuOpen(false)}
                 >
-                  <LogIn className="h-4 w-4 inline mr-2" />
-                  Sign in
+                  <div className="flex items-center">
+                    <LogIn className="h-5 w-5 mr-2" />
+                    Login
+                  </div>
                 </Link>
                 <Link
                   to="/register"
-                  className="block px-3 py-2 rounded-md text-base font-medium bg-primary-600 text-white hover:bg-primary-700"
-                  onClick={() => setIsMenuOpen(false)}
+                  className="block px-3 py-2 rounded-md text-base font-medium bg-primary-600 hover:bg-primary-700 text-white"
                 >
-                  <User className="h-4 w-4 inline mr-2" />
-                  Register
+                  <div className="flex items-center">
+                    <User className="h-5 w-5 mr-2" />
+                    Register
+                  </div>
                 </Link>
               </div>
             )}
