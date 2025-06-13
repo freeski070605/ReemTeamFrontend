@@ -21,22 +21,31 @@ export async function login(username: string, password: string): Promise<User> {
       },
       body: JSON.stringify({ username, password })
     });
-    
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Login failed');
+
+    const text = await response.text();
+
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (jsonErr) {
+      console.error('Invalid JSON from login endpoint:', text);
+      throw new Error('Unexpected server response (not JSON)');
     }
-    
-    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Login failed');
+    }
+
     localStorage.setItem('token', data.token);
     localStorage.setItem('user', JSON.stringify(data.user));
-    
+
     return data.user;
   } catch (error) {
     console.error('Login error:', error);
     throw error;
   }
 }
+
 
 export async function register(username: string, email: string, password: string): Promise<User> {
   try {
@@ -47,22 +56,31 @@ export async function register(username: string, email: string, password: string
       },
       body: JSON.stringify({ username, email, password })
     });
-    
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Registration failed');
+
+    const text = await response.text();
+
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (jsonErr) {
+      console.error('Invalid JSON from register endpoint:', text);
+      throw new Error('Unexpected server response (not JSON)');
     }
-    
-    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Registration failed');
+    }
+
     localStorage.setItem('token', data.token);
     localStorage.setItem('user', JSON.stringify(data.user));
-    
+
     return data.user;
   } catch (error) {
     console.error('Register error:', error);
     throw error;
   }
 }
+
 
 export function logout(): void {
   localStorage.removeItem('token');
