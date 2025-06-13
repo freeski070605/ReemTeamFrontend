@@ -24,7 +24,8 @@ export default function GamePage() {
         
         // Case 1: Join existing game
         if (gameId && !gameId.includes('table-')) {
-          await joinGame(user.id, gameId);
+          await joinGame(gameId, user.id); // ✅ Correct
+
           return;
         }
         
