@@ -131,15 +131,14 @@ export async function createGame(userId: string, stake: number): Promise<GameSta
   }
 }
 
-export async function joinGame(userId: string, gameId: string): Promise<GameState> {
+export async function joinGame(gameId: string): Promise<GameState> {
   if (!gameId || gameId === 'undefined') {
     throw new Error('Invalid game ID');
   }
 
   const response = await fetch(`${API_BASE_URL}/api/games/${gameId}/join`, {
     method: 'POST',
-    headers: getHeaders(),
-    body: JSON.stringify({ userId })
+    headers: getHeaders() // Auth token included
   });
 
   const text = await response.text();
@@ -158,6 +157,7 @@ export async function joinGame(userId: string, gameId: string): Promise<GameStat
 
   return data;
 }
+
 
 
 export async function fetchGameState(gameId: string): Promise<GameState> {
