@@ -43,20 +43,19 @@ export default function ProfilePage() {
   }, [user, activeTab, navigate]);
 
   const loadWithdrawalHistory = async () => {
-    if (!user) return;
-    
-    setIsLoading(true);
-    try {
+  if (!user) return;
 
-      const history = await fetchWithdrawalHistory(user.id);
-        setWithdrawals(history);
-      }
-    } catch (error) {
-      console.error('Error loading withdrawal history:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  setIsLoading(true);
+  try {
+    const history = await fetchWithdrawalHistory(user.id);
+    setWithdrawals(history);
+  } catch (error) {
+    console.error('Error loading withdrawal history:', error);
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   const handleProfileUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
