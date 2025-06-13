@@ -44,6 +44,8 @@ export default function LobbyPage() {
       setActivePlayerCount(count);
     } catch (error) {
       console.error('Error loading lobby data:', error);
+      setError((error as Error).message || 'Error loading lobby data');
+
       // Fallback to mock data if API fails
       setTables([
         { id: 'table-1', amount: 1, maxPlayers: 4, currentPlayers: 3 },
