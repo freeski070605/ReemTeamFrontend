@@ -228,22 +228,22 @@ export async function fetchTables(): Promise<TableStake[]> {
   }
 }
 
-export async function fetchPlayerCount(): Promise<number> {
-  try {
-    const response = await fetch(`${API_BASE_URL}/api/tables/player-count`);
-    
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || 'Failed to fetch player count');
+export async function fetchPlayerCount() {
+  const res = await fetch(`${API_BASE_URL}/api/tables/player-count`, {
+    headers: {
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
     }
-    
-    const data = await response.json();
-    return data.count;
-  } catch (error) {
-    console.error('Fetch player count error:', error);
-    throw error;
+  });
+
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.error || 'Failed to fetch player count');
   }
+
+  const data = await res.json();
+  return data.count;
 }
+
 
 // Withdrawal API functions
 export async function submitWithdrawal(
