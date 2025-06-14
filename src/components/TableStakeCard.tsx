@@ -2,9 +2,16 @@ import  { TableStake } from '../types';
 import { Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-interface TableStakeCardProps {
-  table: TableStake;
+
+
+export interface TableStakeCardProps {
+  id: string;             // table.tableId
+  amount: number;
+  maxPlayers: number;
+  currentPlayers: number;
+  gameId: string;         // ✅ NEW: first active game's _id
 }
+
 
 export default function TableStakeCard({ table }: TableStakeCardProps) {
   const getStakeColorClass = (amount: number): string => {
