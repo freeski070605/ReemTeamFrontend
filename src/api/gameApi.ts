@@ -220,7 +220,9 @@ export async function fetchTables(): Promise<TableStake[]> {
       id: table.tableId,
       amount: table.amount,
       maxPlayers: table.maxPlayers,
-      currentPlayers: table.currentPlayers
+      currentPlayers: table.currentPlayers,
+      gameId: table.activeGames?.[0]?._id || null // ✅ game ID to join
+
     }));
   } catch (error) {
     console.error('Fetch tables error:', error);
