@@ -42,7 +42,7 @@ export default function TableStakeCard({ table }: TableStakeCardProps) {
         </div>
         
         <Link 
-          to={`/game/${table.id}`}
+          to={`/game/${game.id}`}
           className="w-full btn btn-primary"
         >
           Join Table
